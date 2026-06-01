@@ -3,6 +3,7 @@ package com.wao.WAO.modelo;
 import java.time.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import org.openxava.annotations.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ public class InsumoMedico {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idInsumo;
 
 	@Column(length=100)
@@ -26,12 +28,15 @@ public class InsumoMedico {
 	LocalDate fechaCaducidad;
 
 	@Required
+	@Min(0)
 	Integer stockActual;
 
 	@Required
+	@Min(0)
 	Integer stockMinimo;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Sede sede;
 }

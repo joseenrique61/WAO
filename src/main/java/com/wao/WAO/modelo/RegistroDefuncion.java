@@ -12,6 +12,7 @@ public class RegistroDefuncion {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idDefuncion;
 
 	@Required
@@ -26,5 +27,6 @@ public class RegistroDefuncion {
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Animal animal;
 }

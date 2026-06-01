@@ -4,21 +4,24 @@ import java.math.*;
 import java.time.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import org.openxava.annotations.*;
 import lombok.*;
 
 @Entity
 @Getter @Setter
 public class IngresoFinanciero {
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idIngreso;
 
 	@Required
 	LocalDate fecha;
 
 	@Money
+	@Required
+	@Min(0)
 	BigDecimal monto;
 
 	@Required
@@ -29,9 +32,11 @@ public class IngresoFinanciero {
 	@Required
 	String metodoPago;
 
-	Long idPagadorAsociado;
-
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "idContrato")
 	ContratoAdopcion contrato;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@DescriptionsList(descriptionProperties = "nombreCompleto")
+	Padrino padrino;
 }

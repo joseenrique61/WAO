@@ -12,6 +12,7 @@ public class TurnoVoluntariado {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idTurno;
 
 	@Required
@@ -27,9 +28,11 @@ public class TurnoVoluntariado {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Sede sede;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombreCompleto")
+	@Required
 	Voluntario voluntario;
 }

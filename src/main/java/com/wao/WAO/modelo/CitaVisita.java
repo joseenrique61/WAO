@@ -12,6 +12,7 @@ public class CitaVisita {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idCita;
 
 	@Required
@@ -34,13 +35,16 @@ public class CitaVisita {
 	LocalTime horaLlegadaReal;
 
 	@Column(length=20)
+	@Required
 	String gafeteAsignado;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Sede sede;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombreCompleto")
+	@Required
 	Adoptante adoptante;
 }

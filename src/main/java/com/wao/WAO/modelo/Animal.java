@@ -4,6 +4,7 @@ import java.util.*;
 import java.time.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import org.openxava.annotations.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ public class Animal {
 
 	@Id
 	@Column(length=50)
+	@Required
 	String idAnimal;
 
 	@Column(length=100)
@@ -26,6 +28,7 @@ public class Animal {
 	@Column(length=50)
 	String raza;
 
+	@Min(0)
 	Integer edadAproximada;
 
 	@Required
@@ -47,31 +50,32 @@ public class Animal {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Sede sede;
 
-	@OneToMany(mappedBy="animal")
-	@ListProperties("urlArchivo, esPrincipal")
+	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
+	@ListProperties("esPrincipal")
 	Collection<FotografiaMultimedia> fotografias;
 
-	@OneToOne(mappedBy="animal")
+	@OneToOne(mappedBy="animal", cascade=CascadeType.ALL)
 	RegistroDefuncion registroDefuncion;
 
-	@OneToMany(mappedBy="animal")
+	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("fechaConsulta, tipo, diagnostico")
 	Collection<BitacoraMedica> historialMedico;
 
-	@OneToMany(mappedBy="animal")
+	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("tipo, nombreProducto, fechaAplicacion")
 	Collection<PlanProfilactico> planProfilactico;
 
-	@OneToMany(mappedBy="animal")
+	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("medicamento, dosis, fechaInicio, fechaFin")
 	Collection<TratamientoMedico> tratamientos;
 
-	@OneToOne(mappedBy="animal")
+	@OneToOne(mappedBy="animal", cascade=CascadeType.ALL)
 	ContratoAdopcion contratoAdopcion;
 
-	@OneToMany(mappedBy="animal")
+	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("montoAporteMensual, fechaInicio, estadoActivo")
 	Collection<Apadrinamiento> apadrinamientos;
 }

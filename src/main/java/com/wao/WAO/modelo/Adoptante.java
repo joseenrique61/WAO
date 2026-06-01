@@ -12,9 +12,10 @@ public class Adoptante {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idAdoptante;
 
-	@Column(length=20)
+	@Column(length=10, unique=true)
 	@Required
 	String dni;
 
@@ -44,15 +45,15 @@ public class Adoptante {
 	@Enumerated(EnumType.STRING)
 	EstadoAdoptante calificacion;
 
-	@OneToMany(mappedBy="adoptante")
+	@OneToMany(mappedBy="adoptante", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("fechaContrato, animal.nombre")
 	Collection<ContratoAdopcion> contratos;
 
-	@OneToMany(mappedBy="adoptante")
+	@OneToMany(mappedBy="adoptante", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("fecha, rangoHorario, resultadoInteraccion")
 	Collection<CitaVisita> citas;
 
-	@OneToMany(mappedBy="adoptante")
+	@OneToMany(mappedBy="adoptante", cascade=CascadeType.ALL, orphanRemoval=true)
 	@ListProperties("fecha, hora, modalidad")
 	Collection<EntrevistaPreAdopcion> entrevistas;
 }

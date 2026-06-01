@@ -12,16 +12,19 @@ public class FotografiaMultimedia {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Long idFoto;
 
-	@Column(length=255)
+	@Column(length=36)
 	@Required
-	String urlArchivo;
+	@File(acceptFileTypes = "image/png,image/jpg,image/jpeg", maxFileSizeInKb = 5000)
+	String imagen;
 
 	@Required
 	Boolean esPrincipal;
 
-	Double tamanoMB;
+	// TODO: Calculate this property automatically
+	// Double tamanoMB;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Animal animal;
 }

@@ -12,17 +12,15 @@ public class AlertaDiariaMedicacion {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idAlerta;
 
 	@Required
 	LocalDateTime fechaHoraEsperada;
 
 	@Required
-	Boolean confirmacionDada;
-
-	@Column(length=50)
-	@Required
-	String estadoToma;
+	@Enumerated(EnumType.STRING)
+	EstadoToma estadoToma;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "medicamento")
@@ -31,4 +29,8 @@ public class AlertaDiariaMedicacion {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombres")
 	Staff staffConfirmo;
+
+	public boolean isConfirmacionDada() {
+		return estadoToma == EstadoToma.TOMADO;
+	}
 }

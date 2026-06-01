@@ -12,6 +12,7 @@ public class EntrevistaPreAdopcion {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idEntrevista;
 
 	@Required
@@ -29,9 +30,11 @@ public class EntrevistaPreAdopcion {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombreCompleto")
+	@Required
 	Adoptante adoptante;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombres")
+	@Required
 	Staff evaluador;
 }

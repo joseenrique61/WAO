@@ -12,6 +12,7 @@ public class BitacoraMedica {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idRegistro;
 
 	@Required
@@ -30,9 +31,11 @@ public class BitacoraMedica {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Animal animal;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombres")
+	@Required
 	Staff tratante;
 }

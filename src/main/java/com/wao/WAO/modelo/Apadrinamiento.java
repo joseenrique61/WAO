@@ -4,6 +4,7 @@ import java.math.*;
 import java.time.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import org.openxava.annotations.*;
 import lombok.*;
 
@@ -13,9 +14,12 @@ public class Apadrinamiento {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idApadrinamiento;
 
 	@Money
+	@Required
+	@Min(0)
 	BigDecimal montoAporteMensual;
 
 	@Required
@@ -26,9 +30,11 @@ public class Apadrinamiento {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList
+	@Required
 	Animal animal;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@DescriptionsList(descriptionProperties = "nombreCompleto")
+	@Required
 	Padrino padrino;
 }

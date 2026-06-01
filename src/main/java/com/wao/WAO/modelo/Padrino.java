@@ -9,12 +9,12 @@ import lombok.*;
 @Entity
 @Getter @Setter
 public class Padrino {
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Required
 	Long idPadrino;
 
-	@Column(length=20)
+	@Column(length=20, unique=true)
 	@Required
 	String dni;
 
@@ -26,7 +26,11 @@ public class Padrino {
 	@Required
 	String contacto;
 
-	@OneToMany(mappedBy="padrino")
+	@OneToMany(mappedBy="padrino", cascade=CascadeType.ALL)
 	@ListProperties("animal.nombre, montoAporteMensual, fechaInicio, estadoActivo")
 	Collection<Apadrinamiento> apadrinamientos;
+
+	@OneToMany(mappedBy="padrino")
+	@ListProperties("fecha, monto, concepto")
+	Collection<IngresoFinanciero> ingresos;
 }
