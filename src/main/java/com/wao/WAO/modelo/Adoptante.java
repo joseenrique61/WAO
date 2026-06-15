@@ -1,59 +1,59 @@
 package com.wao.WAO.modelo;
 
-import java.util.*;
+import java.util.Collection;
 
 import javax.persistence.*;
+
 import org.openxava.annotations.*;
+import org.openxava.calculators.EnumCalculator;
+import org.openxava.model.*;
+
+import com.wao.WAO.modelo.enums.EstadoPerfil;
+
 import lombok.*;
 
 @Entity
 @Getter @Setter
 public class Adoptante {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Required
-	Long idAdoptante;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    int id;
 
-	@Column(length=10, unique=true)
-	@Required
-	String dni;
+    @Column(length=20)
+    @Required
+    String dni;
 
-	@Column(length=150)
-	@Required
-	String nombreCompleto;
+    @Column(length=100)
+    @Required
+    String nombre;
 
-	@Column(length=255)
-	@Required
-	String direccion;
+    @Column(length=200)
+    @Required
+    String direccion;
 
-	@Column(length=20)
-	@Required
-	String telefono;
+    @Column(length=20)
+    @Required
+    String telefono;
 
-	@Column(length=50)
-	@Required
-	String tipoVivienda;
+    @Column(length=1000)
+    String detalleVivienda;
 
-	@Required
-	Boolean tieneNinos;
+    boolean tieneNinos;
 
-	@Required
-	Boolean tieneOtrasMascotas;
+    boolean tieneMascotas;
 
-	@Required
-	@Enumerated(EnumType.STRING)
-	EstadoAdoptante calificacion;
+    @OneToMany
+    Collection<Entrevista> entrevistas;
 
-	@OneToMany(mappedBy="adoptante", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("fechaContrato, animal.nombre")
-	Collection<ContratoAdopcion> contratos;
-
-	@OneToMany(mappedBy="adoptante", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("fecha, rangoHorario, resultadoInteraccion")
-	Collection<CitaVisita> citas;
-
-	@OneToMany(mappedBy="adoptante", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("fecha, hora, modalidad")
-	Collection<EntrevistaPreAdopcion> entrevistas;
+    @Enumerated(EnumType.STRING)
+    @Column(length=20)
+    @DefaultValueCalculator(
+            value = EnumCalculator.class,
+            properties = {
+                    @PropertyValue(name = "enumType", value = "com.wao.WAO.modelo.enums.EstadoPerfil"),
+                    @PropertyValue(name = "value", value = "PENDIENTE")
+            }
+    )
+    EstadoPerfil estadoPerfil;
 }

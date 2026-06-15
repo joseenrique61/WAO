@@ -1,3 +1,19 @@
 /*
-Pon aquí tu propio estilo
+Dashboard - Cuadro de Mando WAO
 */
+
+#ox_wao_WAO_CuadroMando__editor_totalAnimales .ox-large-display,
+#ox_wao_WAO_CuadroMando__editor_animalesDisponibles .ox-large-display,
+#ox_wao_WAO_CuadroMando__editor_alertasMedicas .ox-large-display,
+#ox_wao_WAO_CuadroMando__editor_inventarioAlertas .ox-large-display,
+#ox_wao_WAO_CuadroMando__editor_adopcionMetrics .ox-large-display,
+#ox_wao_WAO_CuadroMando__editor_voluntarioHoras .ox-large-display {
+	width: 300px;
+}
+
+#ox_wao_WAO_CuadroMando__core .ox-view {
+	max-width: 1300px;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: auto;
+}

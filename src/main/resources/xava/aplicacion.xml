@@ -5,20 +5,18 @@
 <aplicacion nombre="WAO"> 
 	
 	<!--
-	Un módulo por defecto se asume para cada
+	Un mï¿½dulo por defecto se asume para cada
 	controlador en <modulo-defecto/> 
 	-->
 	<modulo-defecto>		  
 		<controlador nombre="Typical"/>		
 	</modulo-defecto>
 	
-	<!--
-	Podemos definir módulos adicionales, por ejemplo: 	
-	<modulo nombre="ProfesorSoloLectura">
-		<modelo nombre="Profesor"/>
-		<controlador nombre="Print"/>
-	</modulo>		
-	-->	  
-		
+	<modulo nombre="CuadroMando">
+		<modelo nombre="CuadroMando"/>
+		<controlador nombre="CuadroMando"/>
+		<controlador nombre="InitModelWithNewInstance"/>
+	</modulo>
+	
 </aplicacion>
 

@@ -1,138 +1,170 @@
 package com.wao.WAO.modelo;
 
-import java.util.*;
-import java.time.*;
-
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import org.openxava.annotations.*;
 import lombok.*;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.ArrayList;
+
+import com.wao.WAO.modelo.enums.*;
 
 @Entity
 @Getter @Setter
 public class Animal {
 
-	@Id
-	@Column(length=50)
-	@Required
-	String idAnimal;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    int id;
 
-	@Column(length=100)
-	@Required
-	String nombre;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @DescriptionsList
+    Sede sede;
 
-	@Column(length=50)
-	@Required
-	String especie;
+    @Column(length=100)
+    @Required
+    String nombre;
 
-	@Column(length=50)
-	String raza;
+    @Column(length=50)
+    @Required
+    String especie;
 
-	@Min(0)
-	Integer edadAproximada;
+    @Column(length=50)
+    String raza;
 
-	@Required
-	@Enumerated(EnumType.STRING)
-	Sexo sexo;
+    int edadAproximada;
 
-	@Required
-	LocalDate fechaRescate;
+    @Column(length=10)
+    @Required
+    String sexo;
 
-	@Column(length=255)
-	String lugarRescate;
+    @Required
+    Date fechaRescate;
 
-	@Column(length=2000)
-	String condicionesHallazgo;
+    @Column(length=200)
+    String lugarRescate;
 
-	@Required
-	@Enumerated(EnumType.STRING)
-	EstadoAnimal estado;
+    @Column(length=1000)
+    String condicionesHallazgo;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@DescriptionsList
-	@Required
-	Sede sede;
+    @Enumerated(EnumType.STRING)
+    @Column(length=30)
+    @Required
+    EstadoAnimal estado;
 
-	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("esPrincipal")
-	Collection<FotografiaMultimedia> fotografias;
+    Date fechaDefuncion;
 
-	@OneToOne(mappedBy="animal", cascade=CascadeType.ALL)
-	RegistroDefuncion registroDefuncion;
+    @Column(length=200)
+    String causaFallecimiento;
 
-	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("fechaConsulta, tipo, diagnostico")
-	Collection<BitacoraMedica> historialMedico;
+    @Column(length=1000)
+    String notasVeterinario;
 
-	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("tipo, nombreProducto, fechaAplicacion")
-	Collection<PlanProfilactico> planProfilactico;
+    @OneToMany(mappedBy = "animal")
+    Collection<EntradaClinica> entradasClinicas;
 
-	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("medicamento, dosis, fechaInicio, fechaFin")
-	Collection<TratamientoMedico> tratamientos;
+    @OneToMany(mappedBy = "animal")
+    Collection<TratamientoProfilactico> tratamientosProfilacticos;
 
-	@OneToOne(mappedBy="animal", cascade=CascadeType.ALL)
-	ContratoAdopcion contratoAdopcion;
+    @ReadOnly
+    @ElementCollection
+    @ListProperties("fechaCambio, nuevoEstado, usuarioAsigno")
+    Collection<LogEstadoAnimal> logsEstado;
 
-	@OneToMany(mappedBy="animal", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("montoAporteMensual, fechaInicio, estadoActivo")
-	Collection<Apadrinamiento> apadrinamientos;
+    public boolean validarCondicionesParaAdopcion() {
 
-	@Transient
-	@Depends("estado") // Se recalcula si cambia el estado
-	@Stereotype("LABEL") // Lo muestra como un texto resaltado en la UI
-	public String getRequisitosAdopcion() {
-		// Llamamos al algoritmo que construimos
-		boolean apto = evaluarDisponibilidadAdopcion();
+        // Regla 1: Validar que no estï¿½ ya en estado terminal o adoptado
+        if (this.estado == EstadoAnimal.ADOPTADO || this.estado == EstadoAnimal.FALLECIDO) {
+            return false;
+        }
 
-		if (apto) {
-			return "CUMPLE REQUISITOS CLÍNICOS Y PROFILÁCTICOS";
-		} else {
-			return "FALTAN REQUISITOS (Revisar Vacunas o Patologías)";
-		}
-	}
+        // Regla 2: Recorrer bitï¿½cora para descartar patologï¿½as contagiosas activas
+        if (this.entradasClinicas != null && !this.entradasClinicas.isEmpty()) {
+            for (EntradaClinica registro : this.entradasClinicas) {
+                if (registro.isEsContagiosa()) {
+                    return false; // Retorno anticipado: Falla validaciï¿½n clï¿½nica
+                }
+            }
+        }
 
-	/**
-	 * Algoritmo de validación estructural (RF-02)
-	 * Verifica si el animal cumple los requisitos para ser puesto en adopción.
-	 */
-	public boolean evaluarDisponibilidadAdopcion() {
+        // Regla 3: Validar esquema de vacunaciï¿½n y desparasitaciï¿½n
+        boolean tieneVacuna = false;
+        boolean tieneDesparasitante = false;
 
-		// Regla 1: Validar que no esté ya en estado terminal o adoptado
-		if (this.estado == EstadoAnimal.ADOPTADO || this.estado == EstadoAnimal.FALLECIDO) {
-			return false;
-		}
+        if (this.tratamientosProfilacticos != null && !this.tratamientosProfilacticos.isEmpty()) {
+            for (TratamientoProfilactico profilaxis : this.tratamientosProfilacticos) {
+                if (profilaxis.getTipo() == TipoProfilactico.VACUNA) {
+                    tieneVacuna = true;
+                } else if (profilaxis.getTipo() == TipoProfilactico.DESPARASITANTE) {
+                    tieneDesparasitante = true;
+                }
+            }
+        }
 
-		// Regla 2: Recorrer bitácora para descartar patologías contagiosas activas
-		if (this.historialMedico != null && !this.historialMedico.isEmpty()) {
-			for (BitacoraMedica registro : this.historialMedico) {
-				if (registro.getEsContagiosa()) {
-					return false; // Falla validación clínica
-				}
-			}
-		}
+        // Si alguna bandera quedÃ³ en false, falla la validaciÃ³n
+        return tieneVacuna && tieneDesparasitante;
+    }
 
-		// Regla 3: Validar esquema de vacunación y desparasitación
-		boolean tieneVacuna = false;
-		boolean tieneDesparasitante = false;
+    public void establecerListoParaAdopcion(String usuario) {
+        if (!validarCondicionesParaAdopcion()) {
+            return;
+        }
 
-		if (this.planProfilactico != null && !this.planProfilactico.isEmpty()) {
-			for (PlanProfilactico profilaxis : this.planProfilactico) {
-				if (profilaxis.getTipo() == TipoProfilaxis.VACUNA) {
-					tieneVacuna = true;
-				} else if (profilaxis.getTipo() == TipoProfilaxis.DESPARASITANTE) {
-					tieneDesparasitante = true;
-				}
-			}
-		}
+        this.estado = EstadoAnimal.LISTO_PARA_ADOPCION;
+        agregarLog(EstadoAnimal.LISTO_PARA_ADOPCION, usuario);
+    }
 
-		// Si alguna bandera quedó en false, falla la validación
-		if (!tieneVacuna || !tieneDesparasitante) {
-			return false; // Falla validación profiláctica
-		}
+    public void adoptarAnimal(String adoptante) {
+        cambiarEstado(EstadoAnimal.ADOPTADO, adoptante);
+    }
 
-		// Ruta de éxito: Cumple todos los requisitos
-		return true;
-	}
+    public boolean validarTransicionEstado(EstadoAnimal nuevoEstado) {
+        if (this.estado == null) return true;
+        switch (this.estado) {
+            case RESCATADO:
+                return nuevoEstado == EstadoAnimal.EN_OBSERVACION || nuevoEstado == EstadoAnimal.FALLECIDO;
+            case EN_OBSERVACION:
+                return nuevoEstado == EstadoAnimal.LISTO_PARA_ADOPCION || nuevoEstado == EstadoAnimal.RESCATADO || nuevoEstado == EstadoAnimal.FALLECIDO;
+            case LISTO_PARA_ADOPCION:
+                return nuevoEstado == EstadoAnimal.ADOPTADO || nuevoEstado == EstadoAnimal.EN_OBSERVACION || nuevoEstado == EstadoAnimal.FALLECIDO;
+            default:
+                return false;
+        }
+    }
+
+    public void cambiarEstado(EstadoAnimal nuevoEstado, String usuario) {
+        if (!validarTransicionEstado(nuevoEstado)) {
+            throw new IllegalArgumentException("Transicion de estado no valida de " + this.estado + " a " + nuevoEstado);
+        }
+        this.estado = nuevoEstado;
+        agregarLog(nuevoEstado, usuario);
+    }
+
+    private void agregarLog(EstadoAnimal nuevoEstado, String usuario) {
+        if (logsEstado == null) {
+            logsEstado = new ArrayList<>();
+        }
+        LogEstadoAnimal log = new LogEstadoAnimal();
+        log.setFechaCambio(new Date());
+        log.setNuevoEstado(nuevoEstado);
+        log.setUsuarioAsigno(usuario);
+        logsEstado.add(log);
+    }
+
+    private void registrarDefuncion(String causa, Date fecha, String notasVeterinario) {
+        this.estado = EstadoAnimal.FALLECIDO;
+        this.fechaDefuncion = fecha;
+        this.causaFallecimiento = causa;
+        this.notasVeterinario = notasVeterinario;
+        this.sede = null;
+        if (logsEstado == null) {
+            logsEstado = new ArrayList<>();
+        }
+        LogEstadoAnimal log = new LogEstadoAnimal();
+        log.setFechaCambio(fecha);
+        log.setNuevoEstado(EstadoAnimal.FALLECIDO);
+        log.setUsuarioAsigno(null);
+        logsEstado.add(log);
+    }
 }

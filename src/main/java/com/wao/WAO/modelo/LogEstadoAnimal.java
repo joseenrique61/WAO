@@ -10,17 +10,16 @@ import com.wao.WAO.modelo.enums.*;
 
 @Embeddable
 @Getter @Setter
-public class SeguimientoPostAdopcion {
+public class LogEstadoAnimal {
 
     @Required
-    Date fechaContacto;
-
-    @Column(length=1000)
-    String notasEstado;
+    Date fechaCambio;
 
     @Enumerated(EnumType.STRING)
     @Column(length=30)
-    TipoContacto tipoContacto;
+    @Required
+    EstadoAnimal nuevoEstado;
 
-    Date proximaFechaSeguimiento;
+    @Column(length=100)
+    String usuarioAsigno;
 }

@@ -1,54 +1,71 @@
 package com.wao.WAO.modelo;
 
-import java.util.*;
-import java.time.*;
-
 import javax.persistence.*;
 import org.openxava.annotations.*;
 import lombok.*;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.ArrayList;
+
+import com.wao.WAO.modelo.enums.*;
 
 @Entity
 @Getter @Setter
 public class ContratoAdopcion {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Required
-	Long idContrato;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    int id;
 
-	@Required
-	LocalDate fechaContrato;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @DescriptionsList
+    Adoptante adoptante;
 
-	@Column(length=255)
-	@Required
-	String nombresTestigos;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @DescriptionsList
+    Animal animal;
 
-	@Required
-	Boolean firmaDigital;
+    @Required
+    Date fechaAdopcion;
 
-	@Required
-	Boolean terminosAceptados;
+    @Column(length=100)
+    String responsableCentro;
 
-	@Column(length=36)
-	@File(acceptFileTypes = "application/pdf")
-	@Required
-	String contratoPDF;
+    @ElementCollection
+    @ListProperties("fechaContacto, notasEstado, tipoContacto")
+    Collection<SeguimientoPostAdopcion> seguimientos;
 
-	@OneToOne(fetch=FetchType.LAZY)
-	@DescriptionsList
-	@Required
-	Animal animal;
+    public boolean validarCompatibilidad() {
+        return adoptante != null && adoptante.getEstadoPerfil() == EstadoPerfil.APTO
+            && animal != null && animal.getEstado() == EstadoAnimal.LISTO_PARA_ADOPCION;
+    }
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@DescriptionsList(descriptionProperties = "nombreCompleto")
-	@Required
-	Adoptante adoptante;
+    public void procesarVinculacion(Adoptante adoptante, Animal animal) {
+        this.adoptante = adoptante;
+        this.animal = animal;
+        if (!validarCompatibilidad()) {
+            throw new IllegalArgumentException("El adoptante debe estar APTO y el animal LISTO_PARA_ADOPCION");
+        }
+        animal.cambiarEstado(EstadoAnimal.ADOPTADO, adoptante.getNombre());
+    }
 
-	@OneToMany(mappedBy="contrato", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("fechaContacto, tipoContacto, notasEstado")
-	Collection<SeguimientoPostAdopcion> seguimientos;
+    public boolean validarAnimalEstaAdoptado() {
+        return animal != null && animal.getEstado() == EstadoAnimal.ADOPTADO;
+    }
 
-	@OneToMany(mappedBy="contrato", cascade=CascadeType.ALL, orphanRemoval=true)
-	@ListProperties("fecha, monto, concepto")
-	Collection<IngresoFinanciero> ingresos;
+    public void registrarSeguimiento(Date fechaContacto, String notasEstado, TipoContacto tipoContacto, Date proximaFecha) {
+        if (!validarAnimalEstaAdoptado()) {
+            throw new IllegalArgumentException("Solo se pueden registrar seguimientos para animales adoptados");
+        }
+        if (seguimientos == null) {
+            seguimientos = new ArrayList<>();
+        }
+        SeguimientoPostAdopcion seguimiento = new SeguimientoPostAdopcion();
+        seguimiento.setFechaContacto(fechaContacto);
+        seguimiento.setNotasEstado(notasEstado);
+        seguimiento.setTipoContacto(tipoContacto);
+        seguimiento.setProximaFechaSeguimiento(proximaFecha);
+        seguimientos.add(seguimiento);
+    }
 }
