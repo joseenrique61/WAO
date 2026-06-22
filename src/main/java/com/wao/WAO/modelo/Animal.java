@@ -74,21 +74,21 @@ public class Animal {
 
     public boolean validarCondicionesParaAdopcion() {
 
-        // Regla 1: Validar que no est� ya en estado terminal o adoptado
+        // Regla 1: Validar que no está ya en estado terminal o adoptado
         if (this.estado == EstadoAnimal.ADOPTADO || this.estado == EstadoAnimal.FALLECIDO) {
             return false;
         }
 
-        // Regla 2: Recorrer bit�cora para descartar patolog�as contagiosas activas
+        // Regla 2: Recorrer bitácora para descartar patologías contagiosas activas
         if (this.entradasClinicas != null && !this.entradasClinicas.isEmpty()) {
             for (EntradaClinica registro : this.entradasClinicas) {
                 if (registro.isEsContagiosa()) {
-                    return false; // Retorno anticipado: Falla validaci�n cl�nica
+                    return false; // Retorno anticipado: Falla validación clínica
                 }
             }
         }
 
-        // Regla 3: Validar esquema de vacunaci�n y desparasitaci�n
+        // Regla 3: Validar esquema de vacunación y desparasitación
         boolean tieneVacuna = false;
         boolean tieneDesparasitante = false;
 
