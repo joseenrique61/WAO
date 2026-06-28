@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import org.openxava.jpa.*;
 
@@ -17,8 +18,11 @@ import lombok.*;
 public class Entrevista {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    int id;
+    @Hidden
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @Column(length=32)
+    String id;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @DescriptionsList

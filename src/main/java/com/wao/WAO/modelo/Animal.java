@@ -1,6 +1,11 @@
 package com.wao.WAO.modelo;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import lombok.*;
 
@@ -11,61 +16,73 @@ import java.util.ArrayList;
 import com.wao.WAO.modelo.enums.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
+@View(name = "Simple", members = "nombre; especie, raza; sexo, edadAproximada")
 public class Animal {
-
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    int id;
+    @Hidden
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(length = 32)
+    String id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @DescriptionsList
     Sede sede;
 
-    @Column(length=100)
+    @Column(length = 100)
     @Required
     String nombre;
 
-    @Column(length=50)
+    @Column(length = 50)
     @Required
     String especie;
 
-    @Column(length=50)
+    @Column(length = 50)
     String raza;
 
+    @Min(0)
     int edadAproximada;
 
-    @Column(length=10)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
     @Required
-    String sexo;
+    SexoAnimal sexo;
 
     @Required
+    @Past
     Date fechaRescate;
 
-    @Column(length=200)
+    @Column(length = 200)
     String lugarRescate;
 
-    @Column(length=1000)
+    @Column(length = 1000)
     String condicionesHallazgo;
 
     @Enumerated(EnumType.STRING)
-    @Column(length=30)
+    @Column(length = 30)
     @Required
     EstadoAnimal estado;
 
-    Date fechaDefuncion;
-
-    @Column(length=200)
-    String causaFallecimiento;
-
-    @Column(length=1000)
+    @Column(length = 1000)
+    @TextArea
     String notasVeterinario;
+
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
+    @Size(max = 10)
+    Collection<Imagen> imagenes;
 
     @OneToMany(mappedBy = "animal")
     Collection<EntradaClinica> entradasClinicas;
 
     @OneToMany(mappedBy = "animal")
     Collection<TratamientoProfilactico> tratamientosProfilacticos;
+
+    @OneToOne(mappedBy = "animal")
+    @ReadOnly
+    @ReferenceView("Simple")
+    Defuncion defuncion;
 
     @ReadOnly
     @ElementCollection
@@ -121,16 +138,14 @@ public class Animal {
 
     public boolean validarTransicionEstado(EstadoAnimal nuevoEstado) {
         if (this.estado == null) return true;
-        switch (this.estado) {
-            case RESCATADO:
-                return nuevoEstado == EstadoAnimal.EN_OBSERVACION || nuevoEstado == EstadoAnimal.FALLECIDO;
-            case EN_OBSERVACION:
-                return nuevoEstado == EstadoAnimal.LISTO_PARA_ADOPCION || nuevoEstado == EstadoAnimal.RESCATADO || nuevoEstado == EstadoAnimal.FALLECIDO;
-            case LISTO_PARA_ADOPCION:
-                return nuevoEstado == EstadoAnimal.ADOPTADO || nuevoEstado == EstadoAnimal.EN_OBSERVACION || nuevoEstado == EstadoAnimal.FALLECIDO;
-            default:
-                return false;
-        }
+        return switch (this.estado) {
+            case RESCATADO -> nuevoEstado == EstadoAnimal.EN_OBSERVACION || nuevoEstado == EstadoAnimal.FALLECIDO;
+            case EN_OBSERVACION ->
+                    nuevoEstado == EstadoAnimal.LISTO_PARA_ADOPCION || nuevoEstado == EstadoAnimal.RESCATADO || nuevoEstado == EstadoAnimal.FALLECIDO;
+            case LISTO_PARA_ADOPCION ->
+                    nuevoEstado == EstadoAnimal.ADOPTADO || nuevoEstado == EstadoAnimal.EN_OBSERVACION || nuevoEstado == EstadoAnimal.FALLECIDO;
+            default -> false;
+        };
     }
 
     public void cambiarEstado(EstadoAnimal nuevoEstado, String usuario) {
@@ -141,6 +156,13 @@ public class Animal {
         agregarLog(nuevoEstado, usuario);
     }
 
+    public void registrarDefuncion(Date fecha) {
+        this.estado = EstadoAnimal.FALLECIDO;
+
+        this.sede = null;
+        agregarLog(EstadoAnimal.FALLECIDO, "Admin");
+    }
+
     private void agregarLog(EstadoAnimal nuevoEstado, String usuario) {
         if (logsEstado == null) {
             logsEstado = new ArrayList<>();
@@ -149,22 +171,6 @@ public class Animal {
         log.setFechaCambio(new Date());
         log.setNuevoEstado(nuevoEstado);
         log.setUsuarioAsigno(usuario);
-        logsEstado.add(log);
-    }
-
-    private void registrarDefuncion(String causa, Date fecha, String notasVeterinario) {
-        this.estado = EstadoAnimal.FALLECIDO;
-        this.fechaDefuncion = fecha;
-        this.causaFallecimiento = causa;
-        this.notasVeterinario = notasVeterinario;
-        this.sede = null;
-        if (logsEstado == null) {
-            logsEstado = new ArrayList<>();
-        }
-        LogEstadoAnimal log = new LogEstadoAnimal();
-        log.setFechaCambio(fecha);
-        log.setNuevoEstado(EstadoAnimal.FALLECIDO);
-        log.setUsuarioAsigno(null);
         logsEstado.add(log);
     }
 }

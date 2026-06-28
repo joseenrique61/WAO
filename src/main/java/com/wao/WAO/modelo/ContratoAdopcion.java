@@ -1,6 +1,7 @@
 package com.wao.WAO.modelo;
 
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import lombok.*;
 
@@ -15,8 +16,11 @@ import com.wao.WAO.modelo.enums.*;
 public class ContratoAdopcion {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    int id;
+    @Hidden
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @Column(length=32)
+    String id;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @DescriptionsList

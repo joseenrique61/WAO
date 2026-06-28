@@ -14,55 +14,65 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
 -->
 
 <controladores>
-    
+
     <!-- Variable de entorno: 
     <var-entorno nombre="WAO_ANYO_DEFECTO" valor="2015"/>
     -->
-    
+
     <!-- Objeto de sesi�n:
     <Objeto nombre="WAO_anyoActivo" clase="java.lang.Integer" valor="2015" 
             ambito="global"/>
     -->
-    
+
     <controlador nombre="Sede">
         <hereda-de controlador="Typical"/>
         <accion nombre="desactivarSede" modo="detail" clase="com.wao.WAO.acciones.DesactivarSede"/>
     </controlador>
-    
+
     <controlador nombre="Animal">
         <hereda-de controlador="Typical"/>
-        <accion nombre="establecerListoParaAdopcion" modo="detail" clase="com.wao.WAO.acciones.EstablecerListoParaAdopcion"/>
-        <accion nombre="save" modo="detail" por-defecto="si-posible" clase="com.wao.WAO.acciones.BloquearGuardadoAnimal"/>
+        <accion nombre="establecerListoParaAdopcion" modo="detail"
+                clase="com.wao.WAO.acciones.EstablecerListoParaAdopcion"/>
+        <accion nombre="save" modo="detail" por-defecto="si-posible"
+                clase="com.wao.WAO.acciones.BloquearGuardadoAnimal"/>
     </controlador>
-    
-    <controlador nombre="EntradaClinica">t
+
+    <controlador nombre="Defuncion">
+        <hereda-de controlador="Typical"/>
+        <accion nombre="save" modo="detail" por-defecto="si-posible" clase="com.wao.WAO.acciones.RegistrarDefuncion"
+                confirmar="true"/>
+    </controlador>
+
+    <controlador nombre="EntradaClinica">
         <hereda-de controlador="Typical"/>
         <accion nombre="agregarEntradaClinica" modo="detail" clase="com.wao.WAO.acciones.AgregarEntradaClinica"/>
     </controlador>
-    
+
     <controlador nombre="TratamientoProfilactico">
         <hereda-de controlador="Typical"/>
         <accion nombre="registrarTratamiento" modo="detail" clase="com.wao.WAO.acciones.RegistrarTratamiento"/>
     </controlador>
-    
+
     <controlador nombre="Adoptante">
         <hereda-de controlador="Typical"/>
-        <accion nombre="save" modo="detail" por-defecto="si-posible" clase="com.wao.WAO.acciones.BloquearGuardadoAdoptante"/>
+        <accion nombre="save" modo="detail" por-defecto="si-posible"
+                clase="com.wao.WAO.acciones.BloquearGuardadoAdoptante"/>
     </controlador>
-    
+
     <controlador nombre="Entrevista">
         <hereda-de controlador="Typical"/>
         <accion nombre="agendarEntrevista" modo="detail" clase="com.wao.WAO.acciones.AgendarEntrevista"/>
     </controlador>
-    
+
     <controlador nombre="ContratoAdopcion">
         <hereda-de controlador="Typical"/>
-        <accion nombre="save" modo="detail" por-defecto="si-posible" clase="com.wao.WAO.acciones.BloquearGuardadoContratoAdopcion"/>
+        <accion nombre="save" modo="detail" por-defecto="si-posible"
+                clase="com.wao.WAO.acciones.BloquearGuardadoContratoAdopcion"/>
     </controlador>
-    
+
     <controlador nombre="CuadroMando">
         <hereda-de controlador="Typical"/>
         <accion nombre="actualizarDashboard" modo="detail" clase="com.wao.WAO.acciones.ActualizarDashboard"/>
     </controlador>
-    
+
 </controladores>
