@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.*;
 
+import com.wao.WAO.validadores.ValidadorCedula;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import org.openxava.calculators.EnumCalculator;
@@ -14,33 +15,35 @@ import com.wao.WAO.modelo.enums.EstadoPerfil;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Adoptante {
-
     @Id
     @Hidden
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    @Column(length=32)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(length = 32)
     String id;
 
-    @Column(length=20)
+    @Column(length = 20)
     @Required
+    @PropertyValidator(ValidadorCedula.class)
     String dni;
 
-    @Column(length=100)
+    @Column(length = 100)
     @Required
     String nombre;
 
-    @Column(length=200)
+    @Column(length = 200)
     @Required
     String direccion;
 
-    @Column(length=20)
+    @Column(length = 20)
     @Required
     String telefono;
 
-    @Column(length=1000)
+    @Column(length = 1000)
+    @Required
     String detalleVivienda;
 
     boolean tieneNinos;
@@ -51,7 +54,7 @@ public class Adoptante {
     Collection<Entrevista> entrevistas;
 
     @Enumerated(EnumType.STRING)
-    @Column(length=20)
+    @Column(length = 20)
     @DefaultValueCalculator(
             value = EnumCalculator.class,
             properties = {

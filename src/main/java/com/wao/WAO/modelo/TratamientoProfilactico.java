@@ -5,7 +5,6 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Past;
 
-import com.wao.WAO.validadores.ValidadorRangoFechas;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import lombok.*;
@@ -17,13 +16,6 @@ import com.wao.WAO.modelo.enums.*;
 @Entity
 @Getter
 @Setter
-//@EntityValidator(value = ValidadorRangoFechas.class,
-//        properties = {
-//                @PropertyValue(name = "fechaA", from = "fechaAplicacion"),
-//                @PropertyValue(name = "fechaLimite", from = "animal.fechaRescate"),
-//                @PropertyValue(name = "mensajeError", value = "La fecha de aplicación no puede ser anterior a la fecha de rescate del animal")
-//        }
-//)
 public class TratamientoProfilactico {
     @Id
     @Hidden
