@@ -43,16 +43,6 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
                 confirmar="true"/>
     </controlador>
 
-    <controlador nombre="EntradaClinica">
-        <hereda-de controlador="Typical"/>
-        <accion nombre="agregarEntradaClinica" modo="detail" clase="com.wao.WAO.acciones.AgregarEntradaClinica"/>
-    </controlador>
-
-    <controlador nombre="TratamientoProfilactico">
-        <hereda-de controlador="Typical"/>
-        <accion nombre="registrarTratamiento" modo="detail" clase="com.wao.WAO.acciones.RegistrarTratamiento"/>
-    </controlador>
-
     <controlador nombre="Adoptante">
         <hereda-de controlador="Typical"/>
         <accion nombre="save" modo="detail" por-defecto="si-posible"

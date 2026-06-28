@@ -74,9 +74,11 @@ public class Animal {
     Collection<Imagen> imagenes;
 
     @OneToMany(mappedBy = "animal")
+    @XOrderBy("fechaConsulta")
     Collection<EntradaClinica> entradasClinicas;
 
     @OneToMany(mappedBy = "animal")
+    @XOrderBy("fechaAplicacion")
     Collection<TratamientoProfilactico> tratamientosProfilacticos;
 
     @OneToOne(mappedBy = "animal")
