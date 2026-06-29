@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.*;
 
+import com.wao.WAO.validadores.ValidadorAdoptante;
 import com.wao.WAO.validadores.ValidadorCedula;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
@@ -17,6 +18,12 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@EntityValidator(value = ValidadorAdoptante.class,
+        properties = {
+                @PropertyValue(name = "estadoPerfil"),
+                @PropertyValue(name = "entrevistas")
+        }
+)
 public class Adoptante {
     @Id
     @Hidden

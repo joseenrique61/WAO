@@ -5,6 +5,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.wao.WAO.validadores.ValidadorAnimal;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import lombok.*;
@@ -19,6 +20,13 @@ import com.wao.WAO.modelo.enums.*;
 @Getter
 @Setter
 @View(name = "Simple", members = "nombre; especie, raza; sexo, edadAproximada")
+@EntityValidator(value = ValidadorAnimal.class,
+        properties = {
+                @PropertyValue(name = "id"),
+                @PropertyValue(name = "estadoNuevo", from = "estado"),
+                @PropertyValue(name = "sede"),
+        }
+)
 public class Animal {
     @Id
     @Hidden

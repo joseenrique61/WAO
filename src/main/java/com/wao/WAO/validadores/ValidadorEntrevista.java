@@ -40,7 +40,7 @@ public class ValidadorEntrevista implements IValidator {
         List<Entrevista> conflictos = XPersistence.getManager()
                 .createQuery(
                         "SELECT e FROM Entrevista e WHERE e.id <> :id AND e.evaluador = :evaluador")
-                .setParameter("id", id)
+                .setParameter("id", id != null ? id : "")
                 .setParameter("evaluador", evaluador)
                 .getResultList();
 

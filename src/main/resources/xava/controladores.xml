@@ -33,8 +33,6 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
         <hereda-de controlador="Typical"/>
         <accion nombre="establecerListoParaAdopcion" modo="detail"
                 clase="com.wao.WAO.acciones.EstablecerListoParaAdopcion"/>
-        <accion nombre="save" modo="detail" por-defecto="si-posible"
-                clase="com.wao.WAO.acciones.BloquearGuardadoAnimal"/>
     </controlador>
 
     <controlador nombre="Defuncion">
@@ -43,16 +41,10 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
                 confirmar="true"/>
     </controlador>
 
-    <controlador nombre="Adoptante">
-        <hereda-de controlador="Typical"/>
-        <accion nombre="save" modo="detail" por-defecto="si-posible"
-                clase="com.wao.WAO.acciones.BloquearGuardadoAdoptante"/>
-    </controlador>
-
     <controlador nombre="ContratoAdopcion">
         <hereda-de controlador="Typical"/>
         <accion nombre="save" modo="detail" por-defecto="si-posible"
-                clase="com.wao.WAO.acciones.BloquearGuardadoContratoAdopcion"/>
+                clase="com.wao.WAO.acciones.RegistrarContratoAdopcion"/>
     </controlador>
 
     <controlador nombre="CuadroMando">
