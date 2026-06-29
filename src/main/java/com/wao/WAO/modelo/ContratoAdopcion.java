@@ -70,23 +70,4 @@ public class ContratoAdopcion {
         }
         animal.cambiarEstado(EstadoAnimal.ADOPTADO, adoptante.getNombre());
     }
-
-//    public boolean validarAnimalEstaAdoptado() {
-//        return animal != null && animal.getEstado() == EstadoAnimal.ADOPTADO;
-//    }
-
-//    public void registrarSeguimiento(Date fechaContacto, String notasEstado, TipoContacto tipoContacto, Date proximaFecha) {
-//        if (!validarAnimalEstaAdoptado()) {
-//            throw new IllegalArgumentException("Solo se pueden registrar seguimientos para animales adoptados");
-//        }
-//        if (seguimientos == null) {
-//            seguimientos = new ArrayList<>();
-//        }
-//        SeguimientoPostAdopcion seguimiento = new SeguimientoPostAdopcion();
-//        seguimiento.setFechaContacto(fechaContacto);
-//        seguimiento.setNotasEstado(notasEstado);
-//        seguimiento.setTipoContacto(tipoContacto);
-//        seguimiento.setProximaFechaSeguimiento(proximaFecha);
-//        seguimientos.add(seguimiento);
-//    }
 }

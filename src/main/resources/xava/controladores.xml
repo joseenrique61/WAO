@@ -49,11 +49,6 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
                 clase="com.wao.WAO.acciones.BloquearGuardadoAdoptante"/>
     </controlador>
 
-    <controlador nombre="Entrevista">
-        <hereda-de controlador="Typical"/>
-        <accion nombre="agendarEntrevista" modo="detail" clase="com.wao.WAO.acciones.AgendarEntrevista"/>
-    </controlador>
-
     <controlador nombre="ContratoAdopcion">
         <hereda-de controlador="Typical"/>
         <accion nombre="save" modo="detail" por-defecto="si-posible"

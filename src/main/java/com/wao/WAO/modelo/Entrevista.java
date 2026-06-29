@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 
+import com.wao.WAO.modelo.enums.EstadoPerfil;
+import com.wao.WAO.validadores.ValidadorEntrevista;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import org.openxava.jpa.*;
@@ -14,17 +17,25 @@ import com.wao.WAO.modelo.enums.ModalidadEntrevista;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
+@EntityValidator(value = ValidadorEntrevista.class,
+        properties = {
+                @PropertyValue(name = "id", from = "id"),
+                @PropertyValue(name = "adoptante", from = "adoptante"),
+                @PropertyValue(name = "fechaHora", from = "fechaHora"),
+                @PropertyValue(name = "evaluador", from = "evaluador"),
+        }
+)
 public class Entrevista {
-
     @Id
     @Hidden
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    @Column(length=32)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(length = 32)
     String id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @DescriptionsList
     Adoptante adoptante;
 
@@ -32,32 +43,14 @@ public class Entrevista {
     LocalDateTime fechaHora;
 
     @Enumerated(EnumType.STRING)
-    @Column(length=30)
+    @Column(length = 30)
     @Required
     ModalidadEntrevista modalidad;
 
-    @Column(length=255)
+    @Column(length = 255)
     String enlaceReunion;
 
-    @Column(length=100)
+    @Column(length = 100)
+    @Required
     String evaluador;
-
-    public boolean validarDisponibilidadEvaluador(String evaluador, LocalDateTime fechaHora) {
-        if (evaluador == null || fechaHora == null) return true;
-
-        LocalDateTime inicio = fechaHora.withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime fin = inicio.plusHours(1);
-
-        @SuppressWarnings("unchecked")
-        List<Entrevista> conflictos = XPersistence.getManager()
-            .createQuery(
-                "SELECT e FROM Entrevista e WHERE e.evaluador = :evaluador " +
-                "AND e.fechaHora >= :inicio AND e.fechaHora < :fin")
-            .setParameter("evaluador", evaluador)
-            .setParameter("inicio", inicio)
-            .setParameter("fin", fin)
-            .getResultList();
-
-        return conflictos.isEmpty();
-    }
 }
