@@ -24,11 +24,6 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
             ambito="global"/>
     -->
 
-    <controlador nombre="Sede">
-        <hereda-de controlador="Typical"/>
-        <accion nombre="desactivarSede" modo="detail" clase="com.wao.WAO.acciones.DesactivarSede"/>
-    </controlador>
-
     <controlador nombre="Animal">
         <hereda-de controlador="Typical"/>
         <accion nombre="establecerListoParaAdopcion" modo="detail"

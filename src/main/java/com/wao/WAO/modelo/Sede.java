@@ -1,6 +1,7 @@
 package com.wao.WAO.modelo;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 
 import com.wao.WAO.modelo.enums.EstadoAnimal;
 import org.hibernate.annotations.GenericGenerator;
@@ -13,12 +14,11 @@ import java.util.Collection;
 @Getter
 @Setter
 public class Sede {
-
     @Id
     @Hidden
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    @Column(length=32)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(length = 32)
     String id;
 
     @Column(length = 100)
@@ -36,7 +36,6 @@ public class Sede {
 
     boolean activa;
 
-//    @ElementCollection
     @ListProperties("nombre, especie, estado")
     @OneToMany(mappedBy = "sede")
     Collection<Animal> animales;
@@ -50,11 +49,12 @@ public class Sede {
                 .count();
     }
 
-    public boolean desactivarSede() {
-        if (calcularOcupacionActual() > 0) {
-            return false;
+    @PreRemove
+    private void validarAntesDeBorrar() {
+        if (!animales.isEmpty()) {
+            // Al lanzar esta excepción, OpenXava detiene el borrado
+            // y muestra el mensaje en la pantalla automáticamente.
+            throw new ValidationException("No se puede eliminar porque tiene animales asociados");
         }
-        activa = false;
-        return true;
     }
 }
