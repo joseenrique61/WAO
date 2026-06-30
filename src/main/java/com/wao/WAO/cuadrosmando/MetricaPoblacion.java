@@ -14,8 +14,13 @@ public class MetricaPoblacion {
     int ocupacionActual;
     int capacidadTotal;
 
-    public int calcularPorcentajeOcupacion() {
+    public double calcularPorcentajeOcupacion() {
         if (capacidadTotal == 0) return 0;
-        return (ocupacionActual * 100) / capacidadTotal;
+        return (double) (ocupacionActual * 100) / capacidadTotal;
+    }
+
+    public double calcularPorcentajeFallecido() {
+        if (capacidadTotal == 0) return 0;
+        return (double) (fallecidos * 100) / capacidadTotal;
     }
 }

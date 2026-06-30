@@ -48,6 +48,11 @@ public class ContratoAdopcion {
     @ListProperties("fechaContacto, notasEstado, tipoContacto")
     Collection<SeguimientoPostAdopcion> seguimientos;
 
+    @AssertTrue(message = "La fecha de adopción no puede ser anterior a la fecha de rescate del animal")
+    private boolean isFechaAdopcionValida() {
+        return !fechaAdopcion.before(animal.fechaRescate);
+    }
+
     @AssertTrue(message = "La fecha de contacto no puede ser anterior a la fecha de adopción del animal")
     private boolean isFechaContactoValida() {
         for (SeguimientoPostAdopcion seguimientoPostAdopcion : seguimientos) {

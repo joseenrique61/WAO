@@ -9,10 +9,10 @@ public class MetricaAdopciones {
     int totalAdopciones;
     int adopcionesExitosas;
     int seguimientosPendientes;
-    BigDecimal porcentajeExito;
+    double porcentajeExito;
 
-    public BigDecimal calcularPorcentajeExitoAdopciones() {
-        if (totalAdopciones == 0) return BigDecimal.ZERO;
-        return BigDecimal.valueOf(adopcionesExitosas * 100.0 / totalAdopciones);
+    public double calcularPorcentajeExitoAdopciones() {
+        if (totalAdopciones == 0) return 0;
+        return adopcionesExitosas * 100.0 / totalAdopciones;
     }
 }

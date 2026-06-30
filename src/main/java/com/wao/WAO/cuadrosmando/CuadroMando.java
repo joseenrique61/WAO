@@ -1,38 +1,98 @@
 package com.wao.WAO.cuadrosmando;
 
-import java.math.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.*;
 
 import javax.persistence.*;
 
+import com.wao.WAO.modelo.dashboardDtos.FechasAnimalYContratoDTO;
+import lombok.Getter;
+import lombok.Setter;
 import org.openxava.annotations.*;
-import org.openxava.jpa.*;
 
 import com.wao.WAO.modelo.*;
 import com.wao.WAO.modelo.enums.*;
+import org.openxava.jpa.XPersistence;
 
-@View(members = "metricasPoblacion; metricasAdopciones; animalesFiltrados")
+@View(members = "filtros [sede, especie, estado]; metricas [#totalDeAnimales, porcentajeDeOcupacion; porcentajeDeAdopcionExitosa, listosParaAdopcion; tiempoPromedioDeAdopcion, porcentajeDeFallecidos]")
+@Getter
+@Setter
 public class CuadroMando {
+    // Filtros
+    @DescriptionsList
+    @ManyToOne(fetch = FetchType.LAZY)
+    Sede sede;
 
+    String especie;
+
+    EstadoAnimal estado;
+
+    // Propiedades
+    @Depends("sede, especie, estado")
     @LargeDisplay(icon = "paw")
-    public MetricaPoblacion getMetricasPoblacion() {
-        return calcularMetricasPoblacion(null, null, null);
+    public String getPorcentajeDeOcupacion() {
+        return String.format("%.2f", calcularMetricasPoblacion().calcularPorcentajeOcupacion()) + "%";
     }
 
+    @Depends("sede, especie, estado")
     @LargeDisplay(icon = "heart")
-    public MetricaAdopciones getMetricasAdopciones() {
-        return calcularMetricasAdopciones();
+    public String getPorcentajeDeAdopcionExitosa() {
+        return String.format("%.2f", calcularMetricasAdopciones().calcularPorcentajeExitoAdopciones()) + "%";
     }
 
-    @SimpleList
-    @ListProperties("sede.nombre, nombre, especie, raza, estado, fechaRescate")
-    public Collection<Animal> getAnimalesFiltrados() {
-        return aplicarFiltros(null, null, null);
+    @Depends("sede, especie, estado")
+    @LargeDisplay(icon = "heart")
+    public String getPorcentajeDeFallecidos() {
+        return String.format("%.2f", calcularMetricasPoblacion().calcularPorcentajeFallecido()) + "%";
     }
 
-    public MetricaPoblacion calcularMetricasPoblacion(Sede sede, String especie, EstadoAnimal estado) {
-        List<Animal> animales = aplicarFiltros(sede, especie, estado);
+    @Depends("sede, especie, estado")
+    @LargeDisplay(icon = "heart")
+    public String getListosParaAdopcion() {
+        return String.format("%d", calcularMetricasPoblacion().getListosAdopcion());
+    }
+
+    @Depends("sede, especie, estado")
+    @LargeDisplay(icon = "heart")
+    public String getTotalDeAnimales() {
+        return String.format("%d", calcularMetricasPoblacion().getTotalAnimales());
+    }
+
+    @Depends("sede, especie, estado")
+    @LargeDisplay(icon = "heart")
+    public String getTiempoPromedioDeAdopcion() {
+        List<Animal> animales = aplicarFiltros();
+        List<String> ids = animales.stream().map(Animal::getId).toList();
+
+        List<FechasAnimalYContratoDTO> fechas = XPersistence.getManager()
+                .createQuery("SELECT new com.wao.WAO.modelo.dashboardDtos.FechasAnimalYContratoDTO(ca.fechaAdopcion, a.fechaRescate) FROM ContratoAdopcion ca INNER JOIN Animal a ON ca.animal = a.id WHERE a.id IN :animales", FechasAnimalYContratoDTO.class)
+                .setParameter("animales", ids)
+                .getResultList();
+        if (fechas.isEmpty()) {
+            return 0 + " días";
+        }
+
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+        double tiempoPromedio = 0;
+        for (FechasAnimalYContratoDTO f : fechas) {
+            LocalDateTime date1 = LocalDate.parse(f.getFechaAdopcion().toString(), dtf).atStartOfDay();
+            LocalDateTime date2 = LocalDate.parse(f.getFechaRescate().toString(), dtf).atStartOfDay();
+            tiempoPromedio += Duration.between(date2, date1).toDays();
+        }
+        tiempoPromedio /= fechas.size();
+
+        return String.format("%.2f días", tiempoPromedio);
+    }
+
+
+
+    public MetricaPoblacion calcularMetricasPoblacion() {
+        List<Animal> animales = aplicarFiltros();
 
         int total = animales.size();
         int rescatados = (int) animales.stream().filter(a -> a.getEstado() == EstadoAnimal.RESCATADO).count();
@@ -47,8 +107,8 @@ public class CuadroMando {
             capacidadTotal = sede.getCapacidadMaxima();
         } else {
             List<Sede> sedes = XPersistence.getManager()
-                .createQuery("SELECT s FROM Sede s", Sede.class)
-                .getResultList();
+                    .createQuery("SELECT s FROM Sede s", Sede.class)
+                    .getResultList();
             capacidadTotal = sedes.stream().mapToInt(Sede::getCapacidadMaxima).sum();
         }
 
@@ -57,36 +117,28 @@ public class CuadroMando {
 
     public MetricaAdopciones calcularMetricasAdopciones() {
         List<ContratoAdopcion> contratos = XPersistence.getManager()
-            .createQuery("SELECT c FROM ContratoAdopcion c", ContratoAdopcion.class)
-            .getResultList();
+                .createQuery("SELECT c FROM ContratoAdopcion c", ContratoAdopcion.class)
+                .getResultList();
 
         int totalAdopciones = contratos.size();
         int adopcionesExitosas = (int) contratos.stream()
-            .filter(c -> c.getAnimal() != null && c.getAnimal().getEstado() == EstadoAnimal.ADOPTADO)
-            .count();
+                .filter(c -> c.getAnimal() != null && c.getAnimal().getEstado() == EstadoAnimal.ADOPTADO)
+                .count();
         int seguimientosPendientes = (int) contratos.stream()
-            .filter(c -> c.getSeguimientos() != null)
-            .flatMap(c -> c.getSeguimientos().stream())
-            .filter(s -> s.getProximaFechaSeguimiento() != null && s.getProximaFechaSeguimiento().after(new Date()))
-            .count();
+                .filter(c -> c.getSeguimientos() != null)
+                .flatMap(c -> c.getSeguimientos().stream())
+                .filter(s -> s.getProximaFechaSeguimiento() != null && s.getProximaFechaSeguimiento().after(new Date()))
+                .count();
 
-        BigDecimal porcentajeExito = BigDecimal.ZERO;
+        double porcentajeExito = 0;
         if (totalAdopciones > 0) {
-            porcentajeExito = BigDecimal.valueOf(adopcionesExitosas * 100.0 / totalAdopciones);
+            porcentajeExito = (double) adopcionesExitosas * 100.0 / totalAdopciones;
         }
 
         return new MetricaAdopciones(totalAdopciones, adopcionesExitosas, seguimientosPendientes, porcentajeExito);
     }
 
-    public int calcularPorcentajeOcupacion(MetricaPoblacion mp) {
-        return mp.calcularPorcentajeOcupacion();
-    }
-
-    public BigDecimal calcularPorcentajeExitoAdopciones(MetricaAdopciones ma) {
-        return ma.calcularPorcentajeExitoAdopciones();
-    }
-
-    public List<Animal> aplicarFiltros(Sede sede, String especie, EstadoAnimal estado) {
+    public List<Animal> aplicarFiltros() {
         StringBuilder jpql = new StringBuilder("SELECT a FROM Animal a WHERE 1=1");
         Map<String, Object> params = new HashMap<>();
 
@@ -104,7 +156,7 @@ public class CuadroMando {
         }
 
         TypedQuery<Animal> query = XPersistence.getManager()
-            .createQuery(jpql.toString(), Animal.class);
+                .createQuery(jpql.toString(), Animal.class);
 
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());

@@ -9,6 +9,8 @@ import org.openxava.jpa.XPersistence;
 import org.openxava.util.Messages;
 import org.openxava.validators.IValidator;
 
+import java.util.Objects;
+
 @Getter @Setter
 public class ValidadorAnimal implements IValidator {
     String id;
@@ -71,7 +73,7 @@ public class ValidadorAnimal implements IValidator {
             return;
         }
 
-        if (!sede.isActiva() || sede.calcularOcupacionActual() >= sede.getCapacidadMaxima()) {
+        if (!sede.isActiva() || (sede.calcularOcupacionActual() >= sede.getCapacidadMaxima() && sede.getAnimales().stream().noneMatch(a -> Objects.equals(a.getId(), id)))) {
             errors.add("La sede no está activa o está al límite.");
         }
 

@@ -43,8 +43,8 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
     </controlador>
 
     <controlador nombre="CuadroMando">
-        <hereda-de controlador="Typical"/>
-        <accion nombre="actualizarDashboard" modo="detail" clase="com.wao.WAO.acciones.ActualizarDashboard"/>
+<!--        <hereda-de controlador="Typical"/>-->
+<!--        <accion nombre="actualizarDashboard" modo="detail" clase="com.wao.WAO.acciones.ActualizarDashboard"/>-->
     </controlador>
 
 </controladores>
