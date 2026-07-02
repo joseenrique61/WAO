@@ -32,7 +32,8 @@ public class Adoptante {
     @Column(length = 32)
     String id;
 
-    @Column(length = 20)
+    @Column(length = 10)
+    @Mask("0000000000")
     @Required
     @PropertyValidator(ValidadorCedula.class)
     String dni;
@@ -45,9 +46,10 @@ public class Adoptante {
     @Required
     String direccion;
 
-    @Column(length = 20)
+    @Column(length = 12)
+    @Mask("000 000 0000")
     @Required
-    String telefono;
+    String telefonoMovil;
 
     @Column(length = 1000)
     @Required
@@ -57,7 +59,7 @@ public class Adoptante {
 
     boolean tieneMascotas;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Collection<Entrevista> entrevistas;
 
     @Enumerated(EnumType.STRING)

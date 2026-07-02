@@ -48,9 +48,10 @@ public class ContratoAdopcion {
     @ListProperties("fechaContacto, notasEstado, tipoContacto")
     Collection<SeguimientoPostAdopcion> seguimientos;
 
-    @AssertTrue(message = "La fecha de adopción no puede ser anterior a la fecha de rescate del animal")
+    @AssertTrue(message = "La fecha de adopción no puede ser anterior a la fecha de rescate del animal o la fecha en la que pasó a estar apto para ser adoptado.")
     private boolean isFechaAdopcionValida() {
-        return !fechaAdopcion.before(animal.fechaRescate);
+        Date fechaListoParaAdopcion = animal.getLogsEstado().stream().filter(a -> a.nuevoEstado == EstadoAnimal.LISTO_PARA_ADOPCION).toList().get(0).getFechaCambio();
+        return !fechaAdopcion.before(animal.getFechaRescate()) && !fechaAdopcion.before(fechaListoParaAdopcion);
     }
 
     @AssertTrue(message = "La fecha de contacto no puede ser anterior a la fecha de adopción del animal")
@@ -73,6 +74,6 @@ public class ContratoAdopcion {
         if (!validarCompatibilidad()) {
             throw new IllegalArgumentException("El adoptante debe estar APTO y el animal LISTO_PARA_ADOPCION");
         }
-        animal.cambiarEstado(EstadoAnimal.ADOPTADO, adoptante.getNombre());
+        animal.adoptarAnimal(adoptante.getNombre(), fechaAdopcion);
     }
 }

@@ -1,10 +1,8 @@
 package com.wao.WAO.cuadrosmando;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import javax.persistence.*;
@@ -66,6 +64,11 @@ public class CuadroMando {
     @LargeDisplay(icon = "heart")
     public String getTiempoPromedioDeAdopcion() {
         List<Animal> animales = aplicarFiltros();
+
+        if (animales.isEmpty()) {
+            return "0 días";
+        }
+
         List<String> ids = animales.stream().map(Animal::getId).toList();
 
         List<FechasAnimalYContratoDTO> fechas = XPersistence.getManager()
@@ -73,16 +76,16 @@ public class CuadroMando {
                 .setParameter("animales", ids)
                 .getResultList();
         if (fechas.isEmpty()) {
-            return 0 + " días";
+            return "0 días";
         }
 
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         double tiempoPromedio = 0;
         for (FechasAnimalYContratoDTO f : fechas) {
-            LocalDateTime date1 = LocalDate.parse(f.getFechaAdopcion().toString(), dtf).atStartOfDay();
-            LocalDateTime date2 = LocalDate.parse(f.getFechaRescate().toString(), dtf).atStartOfDay();
-            tiempoPromedio += Duration.between(date2, date1).toDays();
+
+            LocalDate date1 = f.getFechaAdopcion().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate date2 = f.getFechaRescate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            tiempoPromedio += ChronoUnit.DAYS.between(date2, date1);
         }
         tiempoPromedio /= fechas.size();
 

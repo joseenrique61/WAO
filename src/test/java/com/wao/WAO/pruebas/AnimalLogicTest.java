@@ -175,7 +175,7 @@ public class AnimalLogicTest {
     @Test
     public void cambiarEstado_actualizaEstadoYAgregaLog() {
         Animal a = animalConEstado(EstadoAnimal.RESCATADO);
-        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "vet1");
+        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "vet1", null);
 
         assertEquals(EstadoAnimal.EN_OBSERVACION, a.getEstado());
         assertNotNull(a.getLogsEstado());
@@ -190,21 +190,21 @@ public class AnimalLogicTest {
     @Test(expected = IllegalArgumentException.class)
     public void cambiarEstado_transicionInvalidaLanzaExcepcion() {
         Animal a = animalConEstado(EstadoAnimal.RESCATADO);
-        a.cambiarEstado(EstadoAnimal.ADOPTADO, "vet1");
+        a.cambiarEstado(EstadoAnimal.ADOPTADO, "vet1", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cambiarEstado_desdeAdoptadoLanzaExcepcion() {
         Animal a = animalConEstado(EstadoAnimal.ADOPTADO);
-        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "vet1");
+        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "vet1", null);
     }
 
     @Test
     public void cambiarEstado_acumulaMultiplesLogsEnOrden() {
         Animal a = animalConEstado(null);
-        a.cambiarEstado(EstadoAnimal.RESCATADO, "u1");
-        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "u2");
-        a.cambiarEstado(EstadoAnimal.LISTO_PARA_ADOPCION, "u3");
+        a.cambiarEstado(EstadoAnimal.RESCATADO, "u1", null);
+        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "u2", null);
+        a.cambiarEstado(EstadoAnimal.LISTO_PARA_ADOPCION, "u3", null);
 
         assertEquals(3, a.getLogsEstado().size());
         Iterator<LogEstadoAnimal> it = a.getLogsEstado().iterator();
@@ -217,7 +217,7 @@ public class AnimalLogicTest {
     public void cambiarEstado_inicializaColeccionDeLogsSiEsNull() {
         Animal a = animalConEstado(null);
         assertNull(a.getLogsEstado());
-        a.cambiarEstado(EstadoAnimal.RESCATADO, "u1");
+        a.cambiarEstado(EstadoAnimal.RESCATADO, "u1", null);
         assertNotNull(a.getLogsEstado());
         assertEquals(1, a.getLogsEstado().size());
     }
@@ -226,7 +226,7 @@ public class AnimalLogicTest {
     public void cambiarEstado_noModificaEstadoSiLaTransicionEsInvalida() {
         Animal a = animalConEstado(EstadoAnimal.RESCATADO);
         try {
-            a.cambiarEstado(EstadoAnimal.ADOPTADO, "u1");
+            a.cambiarEstado(EstadoAnimal.ADOPTADO, "u1", null);
             fail("Deberia lanzar excepcion");
         } catch (IllegalArgumentException expected) {
             assertEquals(EstadoAnimal.RESCATADO, a.getEstado());
@@ -291,7 +291,7 @@ public class AnimalLogicTest {
     public void adoptarAnimal_desdeListo_cambiaEstadoYRegistraAdoptante() {
         Animal a = animalConEstado(EstadoAnimal.LISTO_PARA_ADOPCION);
 
-        a.adoptarAnimal("juan");
+        a.adoptarAnimal("juan", null);
 
         assertEquals(EstadoAnimal.ADOPTADO, a.getEstado());
         assertEquals(1, a.getLogsEstado().size());
@@ -303,16 +303,16 @@ public class AnimalLogicTest {
     @Test(expected = IllegalArgumentException.class)
     public void adoptarAnimal_desdeEnObservacionLanzaExcepcion() {
         Animal a = animalConEstado(EstadoAnimal.EN_OBSERVACION);
-        a.adoptarAnimal("juan");
+        a.adoptarAnimal("juan", null);
     }
 
     @Test
     public void adoptarAnimal_flujoCompletoRescatadoAAdoptado() {
         Animal a = animalConEstado(null);
-        a.cambiarEstado(EstadoAnimal.RESCATADO, "rescatista");
-        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "vet");
-        a.cambiarEstado(EstadoAnimal.LISTO_PARA_ADOPCION, "coordinador");
-        a.adoptarAnimal("familiaPerez");
+        a.cambiarEstado(EstadoAnimal.RESCATADO, "rescatista", null);
+        a.cambiarEstado(EstadoAnimal.EN_OBSERVACION, "vet", null);
+        a.cambiarEstado(EstadoAnimal.LISTO_PARA_ADOPCION, "coordinador", null);
+        a.adoptarAnimal("familiaPerez", null);
 
         assertEquals(EstadoAnimal.ADOPTADO, a.getEstado());
         assertEquals(4, a.getLogsEstado().size());

@@ -20,7 +20,7 @@ public class MetricaPoblacion {
     }
 
     public double calcularPorcentajeFallecido() {
-        if (capacidadTotal == 0) return 0;
-        return (double) (fallecidos * 100) / capacidadTotal;
+        if (totalAnimales == 0) return 0;
+        return (double) (fallecidos * 100) / totalAnimales;
     }
 }

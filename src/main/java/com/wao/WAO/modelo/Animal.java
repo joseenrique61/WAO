@@ -77,15 +77,15 @@ public class Animal {
     @TextArea
     String notasVeterinario;
 
-    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
     @Size(max = 10)
     Collection<Imagen> imagenes;
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
     @XOrderBy("fechaConsulta")
     Collection<EntradaClinica> entradasClinicas;
 
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
     @XOrderBy("fechaAplicacion")
     Collection<TratamientoProfilactico> tratamientosProfilacticos;
 
@@ -139,11 +139,11 @@ public class Animal {
         }
 
         this.estado = EstadoAnimal.LISTO_PARA_ADOPCION;
-        agregarLog(EstadoAnimal.LISTO_PARA_ADOPCION, usuario);
+        agregarLog(EstadoAnimal.LISTO_PARA_ADOPCION, usuario, null);
     }
 
-    public void adoptarAnimal(String adoptante) {
-        cambiarEstado(EstadoAnimal.ADOPTADO, adoptante);
+    public void adoptarAnimal(String adoptante, Date fecha) {
+        cambiarEstado(EstadoAnimal.ADOPTADO, adoptante, fecha);
     }
 
     public boolean validarTransicionEstado(EstadoAnimal nuevoEstado) {
@@ -158,27 +158,27 @@ public class Animal {
         };
     }
 
-    public void cambiarEstado(EstadoAnimal nuevoEstado, String usuario) {
+    public void cambiarEstado(EstadoAnimal nuevoEstado, String usuario, Date fecha) {
         if (!validarTransicionEstado(nuevoEstado)) {
             throw new IllegalArgumentException("Transicion de estado no valida de " + this.estado + " a " + nuevoEstado);
         }
         this.estado = nuevoEstado;
-        agregarLog(nuevoEstado, usuario);
+        agregarLog(nuevoEstado, usuario, fecha);
     }
 
     public void registrarDefuncion(Date fecha) {
         this.estado = EstadoAnimal.FALLECIDO;
 
         this.sede = null;
-        agregarLog(EstadoAnimal.FALLECIDO, "Admin");
+        agregarLog(EstadoAnimal.FALLECIDO, "Admin", null);
     }
 
-    private void agregarLog(EstadoAnimal nuevoEstado, String usuario) {
+    private void agregarLog(EstadoAnimal nuevoEstado, String usuario, Date fecha) {
         if (logsEstado == null) {
             logsEstado = new ArrayList<>();
         }
         LogEstadoAnimal log = new LogEstadoAnimal();
-        log.setFechaCambio(new Date());
+        log.setFechaCambio(fecha == null ? new Date() : fecha);
         log.setNuevoEstado(nuevoEstado);
         log.setUsuarioAsigno(usuario);
         logsEstado.add(log);
