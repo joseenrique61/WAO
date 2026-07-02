@@ -26,7 +26,7 @@ public class ValidadorAnimal implements IValidator {
     private void validarEstado(Messages errors) {
         if (id == null || id.isEmpty()) {
             if (estadoNuevo != EstadoAnimal.RESCATADO) {
-                errors.add("Un animal nuevo solo puede tener estado RESCATADO.");
+                errors.add("animal_nuevo_estado_invalido");
                 return;
             }
 
@@ -40,28 +40,28 @@ public class ValidadorAnimal implements IValidator {
 
             // 4. APLICAR REGLAS DE NEGOCIO
             if (estadoPrevio != EstadoAnimal.LISTO_PARA_ADOPCION && estadoNuevo == EstadoAnimal.LISTO_PARA_ADOPCION) {
-                errors.add("No se puede asignar el estado listo para adopción manualmente.");
+                errors.add("no_se_puede_asignar_listo_para_adopcion_manual");
                 return;
             }
 
             if (estadoPrevio != EstadoAnimal.ADOPTADO && estadoNuevo == EstadoAnimal.ADOPTADO) {
-                errors.add("No se puede asignar el estado adoptado manualmente.");
+                errors.add("no_se_puede_asignar_adoptado_manual");
                 return;
             }
 
             if (estadoPrevio != EstadoAnimal.FALLECIDO && estadoNuevo == EstadoAnimal.FALLECIDO) {
-                errors.add("No se puede asignar el estado fallecido manualmente.");
+                errors.add("no_se_puede_asignar_fallecido_manual");
                 return;
             }
 
             if (estadoPrevio == EstadoAnimal.ADOPTADO && estadoNuevo != EstadoAnimal.ADOPTADO) {
-                errors.add("No se puede cambiar el estado de un animal adoptado.");
+                errors.add("no_se_puede_cambiar_estado_animal_adoptado");
                 return;
             }
 
             if (estadoPrevio == EstadoAnimal.FALLECIDO && estadoNuevo != EstadoAnimal.FALLECIDO) {
                 // Si intentan revivir al animal, lanzamos error y cortamos la ejecución
-                errors.add("No se puede cambiar el estado de un animal fallecido.");
+                errors.add("no_se_puede_cambiar_el_estado_de_un_animal_fallecido");
             }
         }
 
@@ -69,12 +69,12 @@ public class ValidadorAnimal implements IValidator {
 
     private void validarSede(Messages errors) {
         if (sede == null) {
-            errors.add("La sede es obligatoria.");
+            errors.add("sede_obligatoria");
             return;
         }
 
         if (!sede.isActiva() || (sede.calcularOcupacionActual() >= sede.getCapacidadMaxima() && sede.getAnimales().stream().noneMatch(a -> Objects.equals(a.getId(), id)))) {
-            errors.add("La sede no está activa o está al límite.");
+            errors.add("sede_inactiva_o_llena");
         }
 
     }

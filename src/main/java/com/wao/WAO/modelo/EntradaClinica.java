@@ -45,7 +45,7 @@ public class EntradaClinica {
 
     boolean esContagiosa;
 
-    @AssertTrue(message = "La fecha de consulta no puede ser anterior a la fecha de rescate del animal")
+    @AssertTrue(message = "fecha_consulta_no_anterior_a_rescate")
     private boolean isFechaConsultaValida() {
         if (fechaConsulta == null || animal == null || animal.getFechaRescate() == null) {
             return true;

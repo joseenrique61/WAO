@@ -6,6 +6,7 @@ import javax.validation.ValidationException;
 import com.wao.WAO.modelo.enums.EstadoAnimal;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
+import org.openxava.util.XavaResources;
 import lombok.*;
 
 import java.util.Collection;
@@ -54,7 +55,7 @@ public class Sede {
         if (animales != null && !animales.isEmpty()) {
             // Al lanzar esta excepción, OpenXava detiene el borrado
             // y muestra el mensaje en la pantalla automáticamente.
-            throw new ValidationException("No se puede eliminar porque tiene animales asociados");
+            throw new ValidationException(XavaResources.getString("sede_con_animales_no_eliminable"));
         }
     }
 }

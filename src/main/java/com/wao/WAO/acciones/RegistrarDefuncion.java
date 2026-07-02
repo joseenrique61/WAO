@@ -17,12 +17,12 @@ public class RegistrarDefuncion extends SaveAction {
         Defuncion defuncion = (Defuncion) getView().getEntity();
 
         if (defuncion.getAnimal() == null) {
-            addError("El animal es obligatorio.");
+            addError("defuncion_animal_obligatorio");
             return;
         }
 
         if (defuncion.getAnimal().getEstado() == EstadoAnimal.FALLECIDO) {
-            addError("Este animal ya tiene un registro de fallecimiento.");
+            addError("defuncion_ya_registrada");
             return;
         }
 
@@ -34,15 +34,15 @@ public class RegistrarDefuncion extends SaveAction {
         Date ultimaFecha = Collections.max(fechas);
 
         if (defuncion.getFechaDefuncion().before(ultimaFecha)) {
-            addError("La fecha de defunción no puede ser anterior a la fecha de rescate del animal, su último tratamiento profiláctico, última entrada clínica o último cambio de estado.");
+            addError("defuncion_fecha_invalida");
             return;
         }
 
         try {
-            defuncion.getAnimal().registrarDefuncion(defuncion.getFechaDefuncion());
-            addMessage("Defunción registrada para " + defuncion.getAnimal().getNombre());
+            defuncion.getAnimal().registrarDefuncion(defuncion.getResponsableCentro(), defuncion.getFechaDefuncion());
+            addMessage("defuncion_registrada", defuncion.getAnimal().getNombre());
         } catch (Exception e) {
-            addError("Error al registrar la defunción: " + e.getMessage());
+            addError("defuncion_error_registro", e.getMessage());
         }
 
         super.execute();

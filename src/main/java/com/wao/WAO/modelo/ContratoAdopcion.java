@@ -6,6 +6,7 @@ import javax.validation.constraints.Past;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
+import org.openxava.util.XavaResources;
 import lombok.*;
 
 import java.util.Collection;
@@ -48,13 +49,13 @@ public class ContratoAdopcion {
     @ListProperties("fechaContacto, notasEstado, tipoContacto")
     Collection<SeguimientoPostAdopcion> seguimientos;
 
-    @AssertTrue(message = "La fecha de adopción no puede ser anterior a la fecha de rescate del animal o la fecha en la que pasó a estar apto para ser adoptado.")
+    @AssertTrue(message = "fecha_adopcion_no_anterior_a_rescate_o_listo")
     private boolean isFechaAdopcionValida() {
         Date fechaListoParaAdopcion = animal.getLogsEstado().stream().filter(a -> a.nuevoEstado == EstadoAnimal.LISTO_PARA_ADOPCION).toList().get(0).getFechaCambio();
         return !fechaAdopcion.before(animal.getFechaRescate()) && !fechaAdopcion.before(fechaListoParaAdopcion);
     }
 
-    @AssertTrue(message = "La fecha de contacto no puede ser anterior a la fecha de adopción del animal")
+    @AssertTrue(message = "fecha_contacto_no_anterior_a_adopcion")
     private boolean isFechaContactoValida() {
         if (seguimientos == null) {
             return true;
@@ -76,7 +77,7 @@ public class ContratoAdopcion {
 
     public void procesarVinculacion() {
         if (!validarCompatibilidad()) {
-            throw new IllegalArgumentException("El adoptante debe estar APTO y el animal LISTO_PARA_ADOPCION");
+            throw new IllegalArgumentException(XavaResources.getString("vinculacion_incompatibilidad"));
         }
         animal.adoptarAnimal(responsableCentro, fechaAdopcion);
     }

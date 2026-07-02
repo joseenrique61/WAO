@@ -23,17 +23,17 @@ public class ValidadorEntrevista implements IValidator {
     @Override
     public void validate(Messages errors) throws Exception {
         if (adoptante == null) {
-            errors.add("La entrevista requiere de un adoptante.");
+            errors.add("entrevista_requiere_adoptante");
             return;
         }
 
         if (adoptante.getEstadoPerfil() != EstadoPerfil.PENDIENTE) {
-            errors.add("Solo se puede agendar una entrevista a un adoptante con estado Pendiente.");
+            errors.add("entrevista_solo_adoptante_pendiente");
             return;
         }
 
         if (!validarEvaluadorDisponible()) {
-            errors.add("El evaluador no está disponible en la hora seleccionada.");
+            errors.add("evaluador_no_disponible");
         }
     }
 

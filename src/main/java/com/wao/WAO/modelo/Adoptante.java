@@ -9,7 +9,6 @@ import com.wao.WAO.validadores.ValidadorCedula;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
 import org.openxava.calculators.EnumCalculator;
-import org.openxava.model.*;
 
 import com.wao.WAO.modelo.enums.EstadoPerfil;
 

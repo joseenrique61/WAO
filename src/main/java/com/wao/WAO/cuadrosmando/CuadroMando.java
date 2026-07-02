@@ -10,6 +10,7 @@ import com.wao.WAO.modelo.dashboardDtos.FechasAnimalYContratoDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.openxava.annotations.*;
+import org.openxava.util.XavaResources;
 
 import com.wao.WAO.modelo.*;
 import com.wao.WAO.modelo.enums.*;
@@ -65,7 +66,7 @@ public class CuadroMando {
         List<Animal> animales = aplicarFiltros();
 
         if (animales.isEmpty()) {
-            return "0 días";
+            return XavaResources.getString("dashboard_cero_dias");
         }
 
         List<String> ids = animales.stream().map(Animal::getId).toList();
@@ -75,7 +76,7 @@ public class CuadroMando {
                 .setParameter("animales", ids)
                 .getResultList();
         if (fechas.isEmpty()) {
-            return "0 días";
+            return XavaResources.getString("dashboard_cero_dias");
         }
 
         double tiempoPromedio = 0;
@@ -88,7 +89,7 @@ public class CuadroMando {
         }
         tiempoPromedio /= fechas.size();
 
-        return String.format("%.2f días", tiempoPromedio);
+        return XavaResources.getString("dashboard_tiempo_promedio_dias", String.format("%.2f", tiempoPromedio));
     }
 
 

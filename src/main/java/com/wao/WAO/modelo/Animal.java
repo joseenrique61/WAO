@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import com.wao.WAO.validadores.ValidadorAnimal;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
+import org.openxava.util.XavaResources;
 import lombok.*;
 
 import java.util.Collection;
@@ -160,7 +161,7 @@ public class Animal {
 
     public void cambiarEstado(EstadoAnimal nuevoEstado, String usuario, Date fecha) {
         if (!validarTransicionEstado(nuevoEstado)) {
-            throw new IllegalArgumentException("Transicion de estado no valida de " + this.estado + " a " + nuevoEstado);
+            throw new IllegalArgumentException(XavaResources.getString("transicion_estado_no_valida", this.estado, nuevoEstado));
         }
         this.estado = nuevoEstado;
         agregarLog(nuevoEstado, usuario, fecha);
