@@ -1,16 +1,12 @@
 package com.wao.WAO.modelo;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.persistence.*;
-import javax.validation.ValidationException;
 
-import com.wao.WAO.modelo.enums.EstadoPerfil;
 import com.wao.WAO.validadores.ValidadorEntrevista;
 import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.*;
-import org.openxava.jpa.*;
 
 import com.wao.WAO.modelo.enums.ModalidadEntrevista;
 

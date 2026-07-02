@@ -24,10 +24,12 @@ public class ValidadorEntrevista implements IValidator {
     public void validate(Messages errors) throws Exception {
         if (adoptante == null) {
             errors.add("La entrevista requiere de un adoptante.");
+            return;
         }
 
         if (adoptante.getEstadoPerfil() != EstadoPerfil.PENDIENTE) {
             errors.add("Solo se puede agendar una entrevista a un adoptante con estado Pendiente.");
+            return;
         }
 
         if (!validarEvaluadorDisponible()) {

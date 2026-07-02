@@ -59,7 +59,7 @@ public class Adoptante {
 
     boolean tieneMascotas;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "adoptante", cascade = CascadeType.ALL, orphanRemoval = true)
     Collection<Entrevista> entrevistas;
 
     @Enumerated(EnumType.STRING)

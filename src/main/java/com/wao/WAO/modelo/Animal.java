@@ -81,11 +81,11 @@ public class Animal {
     @Size(max = 10)
     Collection<Imagen> imagenes;
 
-    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
     @XOrderBy("fechaConsulta")
     Collection<EntradaClinica> entradasClinicas;
 
-    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
     @XOrderBy("fechaAplicacion")
     Collection<TratamientoProfilactico> tratamientosProfilacticos;
 
@@ -142,8 +142,8 @@ public class Animal {
         agregarLog(EstadoAnimal.LISTO_PARA_ADOPCION, usuario, null);
     }
 
-    public void adoptarAnimal(String adoptante, Date fecha) {
-        cambiarEstado(EstadoAnimal.ADOPTADO, adoptante, fecha);
+    public void adoptarAnimal(String usuario, Date fecha) {
+        cambiarEstado(EstadoAnimal.ADOPTADO, usuario, fecha);
     }
 
     public boolean validarTransicionEstado(EstadoAnimal nuevoEstado) {
@@ -166,11 +166,11 @@ public class Animal {
         agregarLog(nuevoEstado, usuario, fecha);
     }
 
-    public void registrarDefuncion(Date fecha) {
+    public void registrarDefuncion(String usuario, Date fecha) {
         this.estado = EstadoAnimal.FALLECIDO;
 
         this.sede = null;
-        agregarLog(EstadoAnimal.FALLECIDO, "Admin", null);
+        agregarLog(EstadoAnimal.FALLECIDO, usuario, fecha);
     }
 
     private void agregarLog(EstadoAnimal nuevoEstado, String usuario, Date fecha) {

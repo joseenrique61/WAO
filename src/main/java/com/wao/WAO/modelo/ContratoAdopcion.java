@@ -56,6 +56,10 @@ public class ContratoAdopcion {
 
     @AssertTrue(message = "La fecha de contacto no puede ser anterior a la fecha de adopción del animal")
     private boolean isFechaContactoValida() {
+        if (seguimientos == null) {
+            return true;
+        }
+
         for (SeguimientoPostAdopcion seguimientoPostAdopcion : seguimientos) {
             if (seguimientoPostAdopcion.getFechaContacto().before(fechaAdopcion)) {
                 return false;
@@ -74,6 +78,6 @@ public class ContratoAdopcion {
         if (!validarCompatibilidad()) {
             throw new IllegalArgumentException("El adoptante debe estar APTO y el animal LISTO_PARA_ADOPCION");
         }
-        animal.adoptarAnimal(adoptante.getNombre(), fechaAdopcion);
+        animal.adoptarAnimal(responsableCentro, fechaAdopcion);
     }
 }

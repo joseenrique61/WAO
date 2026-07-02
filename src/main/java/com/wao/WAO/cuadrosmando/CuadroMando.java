@@ -118,8 +118,12 @@ public class CuadroMando {
     }
 
     public MetricaAdopciones calcularMetricasAdopciones() {
+        List<Animal> animales = aplicarFiltros();
+        List<String> ids = animales.stream().map(Animal::getId).toList();
+
         List<ContratoAdopcion> contratos = XPersistence.getManager()
-                .createQuery("SELECT c FROM ContratoAdopcion c", ContratoAdopcion.class)
+                .createQuery("SELECT ca FROM ContratoAdopcion ca INNER JOIN Animal a ON ca.animal = a.id WHERE a.id IN :animales", ContratoAdopcion.class)
+                .setParameter("animales", ids)
                 .getResultList();
 
         int totalAdopciones = contratos.size();

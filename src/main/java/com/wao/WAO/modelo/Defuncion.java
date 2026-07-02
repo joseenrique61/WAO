@@ -36,4 +36,8 @@ public class Defuncion {
     @ReferenceView("Simple")
     @Required
     Animal animal;
+
+    @Required
+    @Column(length = 50)
+    String responsableCentro;
 }
