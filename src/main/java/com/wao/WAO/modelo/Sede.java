@@ -52,8 +52,8 @@ public class Sede {
     @PreRemove
     private void validarAntesDeBorrar() {
         if (!animales.isEmpty()) {
-            // Al lanzar esta excepciÛn, OpenXava detiene el borrado
-            // y muestra el mensaje en la pantalla autom·ticamente.
+            // Al lanzar esta excepci√≥n, OpenXava detiene el borrado
+            // y muestra el mensaje en la pantalla autom√°ticamente.
             throw new ValidationException("No se puede eliminar porque tiene animales asociados");
         }
     }

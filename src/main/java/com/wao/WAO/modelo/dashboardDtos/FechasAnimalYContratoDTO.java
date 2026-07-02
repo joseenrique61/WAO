@@ -1,6 +1,5 @@
 package com.wao.WAO.modelo.dashboardDtos;
 
-import com.wao.WAO.modelo.enums.EstadoAnimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

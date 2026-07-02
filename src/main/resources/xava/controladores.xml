@@ -1,15 +1,15 @@
-<?xml version = "1.0" encoding = "ISO-8859-1"?>
+<?xml version = "1.0" encoding = "UTF-8"?>
 
 <!DOCTYPE controladores SYSTEM "dtds/controladores.dtd">
 
 <!-- 
-Documentaci�n sobre controladores: 
+Documentación sobre controladores:
 https://www.openxava.org/OpenXavaDoc/docs/controllers_es.html
 
 Controladores por defecto, incluidos en OpenXava (puedes extender de ellos):
 https://github.com/openxava/openxava/blob/master/openxava/src/main/resources/xava/default-controllers.xml
  
-Ejemplos de controladores (de la aplicaci�n de pruebas):
+Ejemplos de controladores (de la aplicación de pruebas):
 https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources/xava/controllers.xml
 -->
 
@@ -19,7 +19,7 @@ https://github.com/openxava/openxava/blob/master/openxavatest/src/main/resources
     <var-entorno nombre="WAO_ANYO_DEFECTO" valor="2015"/>
     -->
 
-    <!-- Objeto de sesi�n:
+    <!-- Objeto de sesión:
     <Objeto nombre="WAO_anyoActivo" clase="java.lang.Integer" valor="2015" 
             ambito="global"/>
     -->

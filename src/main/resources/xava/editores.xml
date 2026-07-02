@@ -1,4 +1,4 @@
-<?xml version = "1.0" encoding = "ISO-8859-1"?>
+<?xml version = "1.0" encoding = "UTF-8"?>
  
 <!DOCTYPE editores SYSTEM "dtds/editores.dtd">
 
@@ -10,7 +10,7 @@ https://www.openxava.org/OpenXavaDoc/docs/customizing_en.html
 <editores>
 
 	<!--  
-	Para probar TuEditor descomenta el siguiente código 
+	Para probar TuEditor descomenta el siguiente cÃ³digo 
 	y anota tu propiedad con @Editor("TuEditor")
 	
  	<editor nombre="TuEditor" url="tuEditor.jsp"/>

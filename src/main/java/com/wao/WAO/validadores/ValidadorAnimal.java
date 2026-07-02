@@ -33,14 +33,14 @@ public class ValidadorAnimal implements IValidator {
             return;
         }
 
-        // Buscamos la entidad tal cual est· en la base de datos (valor previo)
+        // Buscamos la entidad tal cual est√° en la base de datos (valor previo)
         Animal animalEnBaseDeDatos = XPersistence.getManager().find(Animal.class, id);
         if (animalEnBaseDeDatos != null) {
             EstadoAnimal estadoPrevio = animalEnBaseDeDatos.getEstado();
 
             // 4. APLICAR REGLAS DE NEGOCIO
             if (estadoPrevio != EstadoAnimal.LISTO_PARA_ADOPCION && estadoNuevo == EstadoAnimal.LISTO_PARA_ADOPCION) {
-                errors.add("No se puede asignar el estado listo para adopciÛn manualmente.");
+                errors.add("No se puede asignar el estado listo para adopci√≥n manualmente.");
                 return;
             }
 
@@ -60,7 +60,7 @@ public class ValidadorAnimal implements IValidator {
             }
 
             if (estadoPrevio == EstadoAnimal.FALLECIDO && estadoNuevo != EstadoAnimal.FALLECIDO) {
-                // Si intentan revivir al animal, lanzamos error y cortamos la ejecuciÛn
+                // Si intentan revivir al animal, lanzamos error y cortamos la ejecuci√≥n
                 errors.add("No se puede cambiar el estado de un animal fallecido.");
             }
         }
@@ -74,7 +74,7 @@ public class ValidadorAnimal implements IValidator {
         }
 
         if (!sede.isActiva() || (sede.calcularOcupacionActual() >= sede.getCapacidadMaxima() && sede.getAnimales().stream().noneMatch(a -> Objects.equals(a.getId(), id)))) {
-            errors.add("La sede no est· activa o est· al lÌmite.");
+            errors.add("La sede no est√° activa o est√° al l√≠mite.");
         }
 
     }

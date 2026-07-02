@@ -44,7 +44,7 @@ public class TratamientoProfilactico {
     @Future
     Date fechaProximoRefuerzo;
 
-    @AssertTrue(message = "La fecha de aplicación no puede ser anterior a la fecha de rescate del animal")
+    @AssertTrue(message = "La fecha de aplicaciÃ³n no puede ser anterior a la fecha de rescate del animal")
     private boolean isFechaAplicacionValida() {
         if (fechaAplicacion == null || animal == null || animal.getFechaRescate() == null) {
             return true;

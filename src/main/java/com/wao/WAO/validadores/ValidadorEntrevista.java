@@ -31,7 +31,7 @@ public class ValidadorEntrevista implements IValidator {
         }
 
         if (!validarEvaluadorDisponible()) {
-            errors.add("El evaluador no est· disponible en la hora seleccionada.");
+            errors.add("El evaluador no est√° disponible en la hora seleccionada.");
         }
     }
 

@@ -34,15 +34,15 @@ public class RegistrarDefuncion extends SaveAction {
         Date ultimaFecha = Collections.max(fechas);
 
         if (defuncion.getFechaDefuncion().before(ultimaFecha)) {
-            addError("La fecha de defunción no puede ser anterior a la fecha de rescate del animal, su último tratamiento profiláctico, última entrada clínica o último cambio de estado.");
+            addError("La fecha de defunciÃ³n no puede ser anterior a la fecha de rescate del animal, su Ãºltimo tratamiento profilÃ¡ctico, Ãºltima entrada clÃ­nica o Ãºltimo cambio de estado.");
             return;
         }
 
         try {
             defuncion.getAnimal().registrarDefuncion(defuncion.getFechaDefuncion());
-            addMessage("Defunción registrada para " + defuncion.getAnimal().getNombre());
+            addMessage("DefunciÃ³n registrada para " + defuncion.getAnimal().getNombre());
         } catch (Exception e) {
-            addError("Error al registrar la defunción: " + e.getMessage());
+            addError("Error al registrar la defunciÃ³n: " + e.getMessage());
         }
 
         super.execute();

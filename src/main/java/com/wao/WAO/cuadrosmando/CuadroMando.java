@@ -1,7 +1,6 @@
 package com.wao.WAO.cuadrosmando;
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -66,7 +65,7 @@ public class CuadroMando {
         List<Animal> animales = aplicarFiltros();
 
         if (animales.isEmpty()) {
-            return "0 días";
+            return "0 dÃ­as";
         }
 
         List<String> ids = animales.stream().map(Animal::getId).toList();
@@ -76,7 +75,7 @@ public class CuadroMando {
                 .setParameter("animales", ids)
                 .getResultList();
         if (fechas.isEmpty()) {
-            return "0 días";
+            return "0 dÃ­as";
         }
 
         double tiempoPromedio = 0;
@@ -89,7 +88,7 @@ public class CuadroMando {
         }
         tiempoPromedio /= fechas.size();
 
-        return String.format("%.2f días", tiempoPromedio);
+        return String.format("%.2f dÃ­as", tiempoPromedio);
     }
 
 

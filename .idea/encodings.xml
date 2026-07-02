@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/main/java" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/resources" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/cuadrosmando/MetricaPoblacion.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/Adoptante.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/ContratoAdopcion.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/Defuncion.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/EntradaClinica.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/Entrevista.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/Imagen.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/LogEstadoAnimal.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/Sede.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/SeguimientoPostAdopcion.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/TratamientoProfilactico.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/dashboardDtos/FechasAnimalYContratoDTO.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/EstadoAnimal.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/EstadoPerfil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/ModalidadEntrevista.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/SexoAnimal.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/TipoContacto.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/TipoEntradaClinica.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/modelo/enums/TipoProfilactico.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/validadores/ValidadorAdoptante.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/validadores/ValidadorAnimal.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/validadores/ValidadorCedula.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/wao/WAO/validadores/ValidadorEntrevista.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
 </project>
